@@ -1,0 +1,21 @@
+# Core dependencies
+requests==2.31.0
+python-dotenv==1.0.0
+
+# Testing
+pytest==7.4.3
+
+# Development
+black==23.11.0
+flake8==6.1.0
+
+py-trees==2.3.0
+pydantic>=1.8.2
+langchain_core>=0.3.56
+
+#demo
+uvicorn>=0.15.0
+fastapi>=0.115.12
+langchain>=0.3.24
+langchain_community>=0.3.23
+langchain-google-genai>=2.1.3
