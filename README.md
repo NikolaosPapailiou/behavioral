@@ -50,9 +50,9 @@ The tree-based format of BTs results in a clear and intuitive visual and logical
 You can run our demo locally by following the instructions [here](./demo/README.md)
 
 <p align="center">
-    <video controls poster="./assets/demo.png">
-        <source src="./assets/behavioral_demo.mp4">
-    </video>
+    <img
+      src="./assets/demo.png"
+    />
 </p>
 
 ## Installation
