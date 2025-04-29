@@ -50,9 +50,11 @@ The tree-based format of BTs results in a clear and intuitive visual and logical
 You can run our demo locally by following the instructions [here](./demo/README.md)
 
 <p align="center">
+  <a href="https://youtu.be/XGkWWBQWn48" target="_blank">
     <img
       src="./assets/demo.png"
     />
+  </a>
 </p>
 
 ## Installation
