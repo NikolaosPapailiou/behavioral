@@ -144,10 +144,17 @@ class BlackBoard(Dict):
         return ret
 
     def debug_json(self, namespace: str = None) -> Dict:
+        def is_primitive(obj):
+            primitives = (bool, str, int, float, type(None))
+            return isinstance(obj, primitives)
+
         def add_val(d: Dict, key_parts, value):
             k = key_parts.pop(0)
             if len(key_parts) == 0:
-                d[k] = json.loads(value.model_dump_json())
+                if is_primitive(value):
+                    d[k] = str(value)
+                else:
+                    d[k] = json.loads(value.model_dump_json())
                 return
 
             new_d = {}

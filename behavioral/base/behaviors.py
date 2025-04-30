@@ -31,20 +31,11 @@ class Behavior(py_trees.behaviour.Behaviour, ABC):
         super().setup(**kwargs)
         self.namespace = namespace
         self.conversation_tree = conversation_tree
-        if self.guard is not None:
-            if self.guard.guard_on_tick_enter is not None:
-                self.guard.guard_on_tick_enter.setup(
-                    namespace=namespace, conversation_tree=conversation_tree
-                )
-            if self.guard.guard_on_tick_exit is not None:
-                self.guard.guard_on_tick_exit.setup(
-                    namespace=namespace, conversation_tree=conversation_tree
-                )
 
     def tick(self) -> Iterator[py_trees.behaviour.Behaviour]:
         self.logger.debug("Behavior.tick()")
         if self.guard is not None:
-            guard_enter_status = self.guard.check_enter()
+            guard_enter_status = self.guard.check_enter(self)
             if guard_enter_status is not None:
                 self.feedback_message = f"guard enter status: {guard_enter_status}"
                 self.status = guard_enter_status
@@ -63,7 +54,7 @@ class Behavior(py_trees.behaviour.Behaviour, ABC):
         if self.guard is None:
             yield self
             return
-        guard_exit_status = self.guard.check_exit()
+        guard_exit_status = self.guard.check_exit(self)
         if guard_exit_status is None:
             yield self
             return
@@ -78,8 +69,11 @@ class Behavior(py_trees.behaviour.Behaviour, ABC):
         yield self
 
     def format_prompt(self, prompt: str) -> str:
+        # Add global bb
         bb_params = PartialPromptParams(self.conversation_tree.bb.to_dict())
+        # Add local bb
         bb_params.update(self.conversation_tree.bb.to_dict(self.namespace))
+        # Add Behavior params
         bb_params.update(self.prompt_params)
         return bb_params.format_with_eval(prompt)
 
@@ -115,12 +109,12 @@ class AsyncBehavior(Behavior, ABC):
         self.task: Optional[Future] = None
 
     def initialise(self) -> None:
+        self.feedback_message = ""
         self.num_errors = 0
         self.task = None
 
     def update(self) -> py_trees.common.Status:
         """Update the behavior status based on the async task state."""
-        self.feedback_message = ""
         if self.task is None:
             try:
                 self.task = self.conversation_tree.loop.create_task(self.async_update())

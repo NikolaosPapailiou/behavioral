@@ -2,15 +2,17 @@ import operator
 import time
 from typing import Callable, Optional
 
+from behavioral.base import Behavior
+
 
 def check_blackboard_val(
-    a,
+    behavior: Behavior,
     key: str,
     attribute: Optional[str] = None,
     check: Optional[Callable] = None,
     **kwargs,
 ):
-    value = a.conversation_tree.bb.get_value(key, namespace=a.namespace)
+    value = behavior.conversation_tree.bb.get_value(key, namespace=behavior.namespace)
     if value is None:
         return False
 
@@ -24,13 +26,11 @@ def check_blackboard_val(
 
 
 def get_blackboard_val(
-    a,
+    behavior: Behavior,
     key: str,
     attribute: Optional[str] = None,
-    check: Optional[Callable] = None,
-    **kwargs,
 ):
-    value = a.conversation_tree.bb.get_value(key, namespace=a.namespace)
+    value = behavior.conversation_tree.bb.get_value(key, namespace=behavior.namespace)
     if value is None:
         return None
 
@@ -41,10 +41,13 @@ def get_blackboard_val(
     return value
 
 
-def is_user_active(a, time_since_last_message):
-    if len(a.conversation_tree.chat_history) == 0:
+def is_user_active(behavior: Behavior, time_since_last_message):
+    if len(behavior.conversation_tree.chat_history) == 0:
         return True
     current_time = time.time()
-    if current_time - a.conversation_tree.last_message_time > time_since_last_message:
+    if (
+        current_time - behavior.conversation_tree.last_message_time
+        > time_since_last_message
+    ):
         return False
     return True

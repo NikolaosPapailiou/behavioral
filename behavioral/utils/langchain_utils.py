@@ -77,6 +77,7 @@ Respond only with the content of your message. You are talking to the user direc
     async for chunk in chain.astream(str(messages)):
         response_message.content += chunk.content
     response_message.metadata["completed"] = True
+    logger.debug(f"Responding to user {chat_model.model}")
     return response_message
 
 

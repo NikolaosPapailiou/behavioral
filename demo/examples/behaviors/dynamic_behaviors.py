@@ -60,7 +60,7 @@ def create_per_episode_behavior(prompt_params: PartialPromptParams, **kwargs):
     )
 
 
-def create_dynamic_behaviors_tree(chat_model, **kwargs):
+async def create_dynamic_behaviors_tree(chat_model, **kwargs):
     conversation_goal_prompt = "Your name is Edward, you are a very good storyteller."
     intro = ConversationMessage(
         name="intro",

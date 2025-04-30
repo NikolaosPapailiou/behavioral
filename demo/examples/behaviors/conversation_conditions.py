@@ -29,7 +29,7 @@ class CustomConversationState(ConversationState):
     )
 
 
-def create_conversation_conditions_tree(chat_model, **kwargs):
+async def create_conversation_conditions_tree(chat_model, **kwargs):
     conversation_goal_prompt = (
         "Your name is Bob, you are a very social person that wants to get to know others and have a good time."
         "Always continue the conversation with the user in a natural manner and transition smoothly according to the provided goals."

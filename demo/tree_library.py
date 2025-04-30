@@ -8,7 +8,8 @@ tree_creators = {
     "behaviors/behavior_decision": examples.create_behavior_decision_tree,
     "behaviors/dynamic_behaviors": examples.create_dynamic_behaviors_tree,
     # agents
-    "agent/websearch-react": examples.create_react_tree,
+    "agent/websearch-react-tools": examples.create_websearch_react_tools_tree,
+    "agent/calculator-react-mcp": examples.create_calculator_react_mcp_tree,
     # flows
     "flow/teacher": examples.create_teacher_tree,
 }
@@ -36,8 +37,12 @@ tree_descriptions = {
         "It shows how the AI can plan and dynamically execute a sequence of behavior steps, based on the captured conversation state."
     ),
     # agents
-    "agent/websearch-react": (
+    "agent/websearch-react-tools": (
         "AI Agent with web search and web page fetch tools."
+        "This uses REACT to execute tools until the Agent is ready to respond."
+    ),
+    "agent/calculator-react-mcp": (
+        "AI Agent with access to a calculator MCP tools."
         "This uses REACT to execute tools until the Agent is ready to respond."
     ),
     # flows

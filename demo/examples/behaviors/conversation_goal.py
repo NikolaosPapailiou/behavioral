@@ -12,7 +12,7 @@ class GetUserNameState(ConversationGoalStateWithFailure):
     )
 
 
-def create_conversation_goal_tree(chat_model, **kwargs):
+async def create_conversation_goal_tree(chat_model, **kwargs):
     conversation_goal_prompt = (
         "You are a helpfull and friendly assistant having a conversation with a user."
     )

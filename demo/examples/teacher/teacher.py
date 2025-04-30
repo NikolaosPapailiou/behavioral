@@ -28,7 +28,7 @@ class TeachingConversationState(ConversationState):
     )
 
 
-def create_teacher_behavior(prompt_params: PartialPromptParams):
+async def create_teacher_behavior(prompt_params: PartialPromptParams, **kwargs):
     intro = ConversationMessage(
         "intro",
         "Introduce yourself and the purpose of the conversation.",
@@ -135,13 +135,14 @@ Teach only factual and truthful information.
 """
 
 
-def create_teacher_tree(
+async def create_teacher_tree(
     chat_model,
     prompt_params: PartialPromptParams = PartialPromptParams(),
     namespace: str = None,
+    **kwargs,
 ):
     tree = ConversationBehaviourTree(
-        root=create_teacher_behavior(prompt_params),
+        root=await create_teacher_behavior(prompt_params),
         conversation_goal_prompt=conversation_goal_prompt,
         chat_model=chat_model,
         conversation_state_type=TeachingConversationState,

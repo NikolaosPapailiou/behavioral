@@ -143,3 +143,44 @@ class RemoveBlackboardVariable(Behavior):
         else:
             self.feedback_message = "'{}' not found, nothing to remove"
         return py_trees.common.Status.SUCCESS
+
+
+class IncrementBlackboardVariable(Behavior):
+    def __init__(self, name: str, bb_variable: str):
+        super().__init__(name=name)
+        self.bb_variable = bb_variable
+        name_components = self.bb_variable.split(".")
+        self.key = name_components[0]
+        self.key_attributes = ".".join(
+            name_components[1:]
+        )  # empty string if no other parts
+
+    def update(self) -> py_trees.common.Status:
+        """
+        Unset and always return success.
+
+        Returns:
+             :data:`~py_trees.common.Status.SUCCESS`
+        """
+        value = self.conversation_tree.bb.get_value(self.key, self.namespace)
+        if self.key_attributes == "":
+            if value is None:
+                value = 0
+            value += 1
+        else:
+            if value is None:
+                self.feedback_message = (
+                    "key '{}' does not yet exist on the blackboard".format(self.key)
+                )
+                return py_trees.common.Status.FAILURE
+            try:
+                operator.iadd(operator.attrgetter(self.key_attributes)(value), 1)
+            except AttributeError:
+                self.feedback_message = (
+                    "blackboard key-value pair exists, but the value does not "
+                    f"have the requested nested attributes [{self.key}]"
+                )
+                return py_trees.common.Status.FAILURE
+        self.conversation_tree.bb.set_value(self.key, value, self.namespace)
+        self.feedback_message = f"[{value}]"
+        return py_trees.common.Status.SUCCESS

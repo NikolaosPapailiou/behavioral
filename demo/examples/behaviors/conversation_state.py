@@ -27,7 +27,7 @@ class CustomConversationState(ConversationState):
     )
 
 
-def create_conversation_state_tree(chat_model, **kwargs):
+async def create_conversation_state_tree(chat_model, **kwargs):
     conversation_goal_prompt = "Your name is Bob, you are a very social person that wants to get to know others and have a good time."
     intro = ConversationMessage(
         name="intro",

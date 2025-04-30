@@ -30,20 +30,11 @@ class Sequence(py_trees.composites.Sequence):
         super().setup(**kwargs)
         self.namespace = namespace
         self.conversation_tree = conversation_tree
-        if self.guard is not None:
-            if self.guard.guard_on_tick_enter is not None:
-                self.guard.guard_on_tick_enter.setup(
-                    namespace=namespace, conversation_tree=conversation_tree
-                )
-            if self.guard.guard_on_tick_exit is not None:
-                self.guard.guard_on_tick_exit.setup(
-                    namespace=namespace, conversation_tree=conversation_tree
-                )
 
     def tick(self) -> Iterator[py_trees.behaviour.Behaviour]:
         self.logger.debug("Sequence.tick()")
         if self.guard is not None:
-            guard_enter_status = self.guard.check_enter()
+            guard_enter_status = self.guard.check_enter(self)
             if guard_enter_status is not None:
                 self.status = guard_enter_status
                 self.current_child = self.children[0] if self.children else None
@@ -61,7 +52,7 @@ class Sequence(py_trees.composites.Sequence):
         if self.guard is None:
             yield self
             return
-        guard_exit_status = self.guard.check_exit()
+        guard_exit_status = self.guard.check_exit(self)
         if guard_exit_status is None:
             yield self
             return
@@ -99,20 +90,11 @@ class Selector(py_trees.composites.Selector):
         super().setup(**kwargs)
         self.namespace = namespace
         self.conversation_tree = conversation_tree
-        if self.guard is not None:
-            if self.guard.guard_on_tick_enter is not None:
-                self.guard.guard_on_tick_enter.setup(
-                    namespace=namespace, conversation_tree=conversation_tree
-                )
-            if self.guard.guard_on_tick_exit is not None:
-                self.guard.guard_on_tick_exit.setup(
-                    namespace=namespace, conversation_tree=conversation_tree
-                )
 
     def tick(self) -> Iterator[py_trees.behaviour.Behaviour]:
         self.logger.debug("Selector.tick()")
         if self.guard is not None:
-            guard_enter_status = self.guard.check_enter()
+            guard_enter_status = self.guard.check_enter(self)
             if guard_enter_status is not None:
                 self.status = guard_enter_status
                 self.current_child = self.children[0] if self.children else None
@@ -127,7 +109,7 @@ class Selector(py_trees.composites.Selector):
         if self.guard is None:
             yield self
             return
-        guard_exit_status = self.guard.check_exit()
+        guard_exit_status = self.guard.check_exit(self)
         if guard_exit_status is None:
             yield self
             return
@@ -165,20 +147,11 @@ class Parallel(py_trees.composites.Parallel):
         super().setup(**kwargs)
         self.namespace = namespace
         self.conversation_tree = conversation_tree
-        if self.guard is not None:
-            if self.guard.guard_on_tick_enter is not None:
-                self.guard.guard_on_tick_enter.setup(
-                    namespace=namespace, conversation_tree=conversation_tree
-                )
-            if self.guard.guard_on_tick_exit is not None:
-                self.guard.guard_on_tick_exit.setup(
-                    namespace=namespace, conversation_tree=conversation_tree
-                )
 
     def tick(self) -> Iterator[py_trees.behaviour.Behaviour]:
         self.logger.debug("Parallel.tick()")
         if self.guard is not None:
-            guard_enter_status = self.guard.check_enter()
+            guard_enter_status = self.guard.check_enter(self)
             if guard_enter_status is not None:
                 self.status = guard_enter_status
                 self.current_child = self.children[0] if self.children else None
@@ -193,7 +166,7 @@ class Parallel(py_trees.composites.Parallel):
         if self.guard is None:
             yield self
             return
-        guard_exit_status = self.guard.check_exit()
+        guard_exit_status = self.guard.check_exit(self)
         if guard_exit_status is None:
             yield self
             return

@@ -61,7 +61,7 @@ class ThreadManager:
 
         thread_id = str(uuid.uuid4())
         model = init_chat_model(model=model_name)
-        tree = tree_creators[tree_type](model)
+        tree = await tree_creators[tree_type](model)
         tree.setup()
         tree.visitors.append(py_trees.visitors.DebugVisitor())
 

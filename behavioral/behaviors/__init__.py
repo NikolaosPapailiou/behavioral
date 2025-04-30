@@ -1,6 +1,7 @@
 from .ai_to_blackboard import AIToBlackboard
 from .blackboard import (CheckBlackboardVariableValue,
-                         RemoveBlackboardVariable, RespondToUserFromBlackboard)
+                         IncrementBlackboardVariable, RemoveBlackboardVariable,
+                         RespondToUserFromBlackboard)
 from .capture_state import CaptureConversationState
 from .check_inactivity import (CheckHasPendingUserMessage,
                                CheckNoPendingUserMessage, CheckUserIsActive)
@@ -28,5 +29,6 @@ __all__ = [
     "RemoveChildren",
     "RespondToUserFromBlackboard",
     "RemoveBlackboardVariable",
+    "IncrementBlackboardVariable",
     "RunTools",
 ]
