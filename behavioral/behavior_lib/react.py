@@ -17,7 +17,7 @@ async def create_react_behavior(
     invoke = AIToBlackboard(
         name="invoke",
         prompt="""
-You are solving the user question by a sequence of tool executions 
+You are answering the user question by performing a sequence of tool executions 
 
 Previously executed tools with results:
 {tool_results}
@@ -43,7 +43,7 @@ Respond if ready to answer the question otherwise execute some tools.
 
     run_tools = RunTools(
         name="run_tools",
-        # if no tools succeed
+        # if no tools -> succeed
         guard=BehaviorGuard(
             guard_on_tick_enter=Guard(success_check=lambda a: not has_tools(a))
         ),
@@ -57,7 +57,7 @@ Respond if ready to answer the question otherwise execute some tools.
     react_loop = Sequence(
         "react_loop",
         guard=BehaviorGuard(
-            # continue if this iteration succeeded and tools were executed
+            # continue loop if this iteration succeeded and tools were executed
             guard_on_tick_exit=Guard(
                 running_check=lambda a: a.status == py_trees.common.Status.SUCCESS
                 and has_tools(a)
@@ -66,9 +66,9 @@ Respond if ready to answer the question otherwise execute some tools.
         children=[invoke, run_tools],
     )
 
-    # Respond if no more tools from invoke output
+    # On success, respond from invoke output
     respond = RespondToUserFromBlackboard(name="respond", bb_variable="invoke.content")
-    # If max tools reached respond with a new message
+    # On failure, max tools reached, respond with a new model invocation
     respond_on_failure = ConversationMessage(
         name="respond_on_failure",
         message_prompt="""

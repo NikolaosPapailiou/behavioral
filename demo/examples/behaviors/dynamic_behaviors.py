@@ -31,7 +31,7 @@ class Character(BaseModel):
 
 class StoryPlan(BaseModel):
     story_abstract: str = Field(
-        "A short description of this episode. This should only contain the **major** plot points that need to be covered."
+        "A short description of the story. This should only contain the **major** plot points that need to be covered not more than 50 words."
     )
     episodes: List[StoryEpisode]
     characters: List[Character]
@@ -39,7 +39,6 @@ class StoryPlan(BaseModel):
 
 def create_per_episode_behavior(prompt_params: PartialPromptParams, **kwargs):
     episode = prompt_params["episode"]
-    print(f"!!@@@episode{episode}")
     return ConversationMessage(
         name=f"narate_episode({episode.episode_title})",
         prompt_params=prompt_params,
@@ -77,7 +76,7 @@ async def create_dynamic_behaviors_tree(chat_model, **kwargs):
     plan_story = AIToBlackboard(
         "plan_story",
         """
-    You are an expert at creating stories scenarios with a set of 3-5 episodes.
+    You are an expert at creating story scenarios with a set of 3-5 episodes.
     Make the plot interesting in oredr to engage the user.
     Each episode should be able to be narrated in less than 100 words.
 
@@ -87,19 +86,19 @@ async def create_dynamic_behaviors_tree(chat_model, **kwargs):
         memory=True,
     )
 
-    tell_story = Sequence("tell_story", memory=True)
+    episodes = Sequence("episodes")
     expand_episodes = ExpandTree(
         name="expand_episodes",
-        expand_on_state_key="plan_story",
-        expand_on_state_attribute="episodes",
-        expand_target=tell_story,
+        expand_on_state_variable="plan_story.episodes",
+        expand_target=episodes,
+        behavior_item_name_variable="episode_title",
         expand_prompt_param_key="episode",
         behavior_constructor=create_per_episode_behavior,
     )
 
     flow = Sequence(
         name="conversation",
-        children=[intro, get_story_details, plan_story, expand_episodes, tell_story],
+        children=[intro, get_story_details, plan_story, expand_episodes, episodes],
     )
     tree = ConversationBehaviourTree(
         root=flow,

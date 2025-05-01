@@ -122,8 +122,7 @@ Based on the chat history, pick one of the available response behaviors that you
     run_behavior = Sequence("run_behavior", memory=False)
     expand_behavior = ExpandTree(
         "expand_behavior",
-        expand_on_state_key="pick_behavior",
-        expand_on_state_attribute="behavior",
+        expand_on_state_variable="pick_behavior.behavior",
         expand_target=run_behavior,
         pick_behavior_constructor=available_behaviors,
     )

@@ -12,12 +12,12 @@ class ExpandTree(Behavior):
     def __init__(
         self,
         name: str,
-        expand_on_state_key: str,
-        expand_on_state_attribute: str,
+        expand_on_state_variable: str,
         expand_target: py_trees.composites.Composite,
         guard: Optional[BehaviorGuard] = None,
         prompt_params: PartialPromptParams = PartialPromptParams(),
         expand_prompt_param_key: str = "item",
+        behavior_item_name_variable: str = None,
         behavior_constructor: Callable = None,
         pick_behavior_constructor: dict[str, Callable] = None,
     ):
@@ -26,10 +26,15 @@ class ExpandTree(Behavior):
             guard=guard,
             prompt_params=prompt_params,
         )
-        self.expand_on_state_key = expand_on_state_key
-        self.expand_on_state_attribute = expand_on_state_attribute
+        self.expand_on_state_variable = expand_on_state_variable
+        name_components = self.expand_on_state_variable.split(".")
+        self.expand_on_state_key = name_components[0]
+        self.expand_on_state_attribute = ".".join(
+            name_components[1:]
+        )  # empty string if no other parts
         self.expand_target = expand_target
         self.expand_prompt_param_key = expand_prompt_param_key
+        self.behavior_item_name_variable = behavior_item_name_variable
         self.behavior_constructor = behavior_constructor
         self.pick_behavior_constructor = pick_behavior_constructor
 
@@ -47,11 +52,11 @@ class ExpandTree(Behavior):
     def expand(self):
         try:
             self.logger.debug("Expanding")
-            expand_state = self.conversation_tree.bb.get_value(
-                key=self.expand_on_state_key,
-                namespace=self.namespace,
+            items = self.conversation_tree.bb.get_value(
+                key=self.expand_on_state_key, namespace=self.namespace
             )
-            items = getattr(expand_state, self.expand_on_state_attribute)
+            if self.expand_on_state_attribute:
+                items = getattr(items, self.expand_on_state_attribute)
             if isinstance(items, str):
                 items = [items]
             for item in items:
@@ -68,11 +73,15 @@ class ExpandTree(Behavior):
                 )
                 prompt_params.update(self.prompt_params)
                 new_namespace = "" if self.namespace is None else self.namespace
+                item_name = item
+                if self.behavior_item_name_variable is not None:
+                    item_name = getattr(item, self.behavior_item_name_variable)
+
                 new_namespace += (
                     "/"
                     + self.name
                     + "("
-                    # + item
+                    + item_name
                     + ")["
                     + str(random.randint(0, 1000000))
                     + "]"

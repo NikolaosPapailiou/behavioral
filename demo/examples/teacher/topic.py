@@ -102,8 +102,7 @@ def create_per_topic_behavior(prompt_params: PartialPromptParams, **kwargs) -> S
     explain_sections = Sequence("explain_sections", memory=False)
     expand_sections = ExpandTree(
         name="expand_sections",
-        expand_on_state_key=f"plan_sections({topic})",
-        expand_on_state_attribute="section_titles",
+        expand_on_state_variable=f"plan_sections({topic}).section_titles",
         expand_target=explain_sections,
         expand_prompt_param_key="section",
         behavior_constructor=create_explain_section_behavior,

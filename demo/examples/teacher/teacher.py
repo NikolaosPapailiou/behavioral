@@ -82,8 +82,7 @@ async def create_teacher_behavior(prompt_params: PartialPromptParams, **kwargs):
     explain_topics_seq = Sequence("explain_topics", memory=True)
     expand_topics = ExpandTree(
         name="expand_topics",
-        expand_on_state_key="conversation_state",
-        expand_on_state_attribute="topics",
+        expand_on_state_variable="conversation_state.topics",
         expand_target=explain_topics_seq,
         expand_prompt_param_key="topic",
         behavior_constructor=create_per_topic_behavior,
