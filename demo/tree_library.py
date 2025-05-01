@@ -7,6 +7,7 @@ tree_creators = {
     "behaviors/conversation_conditions": examples.create_conversation_conditions_tree,
     "behaviors/behavior_decision": examples.create_behavior_decision_tree,
     "behaviors/dynamic_behaviors": examples.create_dynamic_behaviors_tree,
+    "behaviors/parallel_actions": examples.create_parallel_actions_tree,
     # agents
     "agent/websearch-react-tools": examples.create_websearch_react_tools_tree,
     "agent/calculator-react-mcp": examples.create_calculator_react_mcp_tree,
@@ -36,6 +37,7 @@ tree_descriptions = {
         "This AI wants to tell you a story! "
         "It shows how the AI can plan and dynamically execute a sequence of behavior steps, based on the captured conversation state."
     ),
+    "behaviors/parallel_actions": ("Runs 2 async actions in parallel."),
     # agents
     "agent/websearch-react-tools": (
         "AI Agent with web search and web page fetch tools."

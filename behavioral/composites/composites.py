@@ -127,13 +127,13 @@ class Parallel(py_trees.composites.Parallel):
     def __init__(
         self,
         name,
-        memory: bool = True,
+        policy: py_trees.common.ParallelPolicy.Base,
         children: Optional[List[py_trees.behaviour.Behaviour]] = None,
         guard: Optional[BehaviorGuard] = None,
     ):
         super().__init__(
             name=name,
-            memory=memory,
+            policy=policy,
             children=children,
         )
         self.guard = guard
